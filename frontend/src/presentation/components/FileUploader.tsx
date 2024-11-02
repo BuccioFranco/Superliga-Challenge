@@ -1,10 +1,10 @@
 // src/presentation/components/CsvReader.tsx
 import React, { useState } from 'react';
-import Papa from 'papaparse';
 import { Socio } from '../../domain/models/SocioType';
+import { getUploadCsv } from '../../application/servicies/SocioService';
 
 interface CsvReaderProps {
-  onDataLoad: () => void; // Propiedad para manejar la carga de datos
+  onDataLoad: (data: Socio[]) => void; // Cambia esta función para recibir los datos cargados
 }
 
 const CsvReader: React.FC<CsvReaderProps> = ({ onDataLoad }) => {
@@ -23,39 +23,20 @@ const CsvReader: React.FC<CsvReaderProps> = ({ onDataLoad }) => {
     }
   };
 
-  const handleFileSubmit = () => {
+  const uploadFile = async () => {
     if (!file) {
       setError("Por favor, selecciona un archivo antes de enviar.");
       return;
     }
 
-    Papa.parse(file, {
-      delimiter: ';', 
-      header: false, 
-      skipEmptyLines: true,
-      complete: (results) => {
-        const parsedData: string[][] = results.data as string[][];
-
-        if (parsedData.length > 0) {
-          const filteredData: Socio[] = parsedData.map((row) => ({
-            nombre: row[0], 
-            edad: Number(row[1]) || 0, // Convertir a número, manejar NaN
-            equipo: row[2], 
-            estadoCivil: row[3], 
-            nivelEstudios: row[4], 
-          }));
-
-          setData(filteredData);
-          onDataLoad(); // Notificar que los datos han sido cargados
-          setError(null);
-        } else {
-          setError("El archivo no contiene datos.");
-        }
-      },
-      error: (err) => {
-        setError(`Error al leer el archivo: ${err.message}`);
-      },
-    });
+    try {
+      const responseData: Socio[] = await getUploadCsv(file); 
+      setData(responseData); 
+      onDataLoad(responseData); 
+      setError(null);
+    } catch (error) {
+      setError(`Error al cargar el archivo: ${(error as Error).message}`);
+    }
   };
 
   return (
@@ -68,7 +49,7 @@ const CsvReader: React.FC<CsvReaderProps> = ({ onDataLoad }) => {
         className="mb-4 border rounded-lg p-2"
       />
       <button
-        onClick={handleFileSubmit}
+        onClick={uploadFile}
         className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition duration-200"
       >
         Enviar

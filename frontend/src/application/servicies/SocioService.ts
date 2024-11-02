@@ -1,7 +1,7 @@
-// src/application/services/SocioService.ts
 import { Socio } from '../../domain/models/SocioType';
 import { EstadisticaEquipo } from '../../domain/models/StatsType';
 import {
+  uploadCsv,
   fetchTotalSocios,
   fetchPromedioEdadRacing,
   fetchCasadosConEstudios,
@@ -9,12 +9,8 @@ import {
   fetchEstadisticasPorEquipo,
 } from '../../insfractucture/api/socioService';
 
-export const getSocios = async (): Promise<Socio[]> => {
-  const response = await fetch('http://localhost:3000/api/socios');
-  if (!response.ok) {
-    throw new Error('Error al obtener los socios');
-  }
-  return response.json();
+export const getUploadCsv = async (file: File): Promise<Socio[]> => {
+  return uploadCsv(file);
 };
 
 export const getTotalSocios = async (): Promise<number> => {
