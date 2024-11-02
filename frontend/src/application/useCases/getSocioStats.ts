@@ -15,7 +15,7 @@ export interface SocioStats {
   }[];
 }
 
-export const processSocioData = async (): Promise<SocioStats> => {
+export const  processSocioData = async (): Promise<SocioStats> => {
   const socios = await getSocios();
 
   // Procesamiento de la data para cada una de las estadísticas requeridas:
