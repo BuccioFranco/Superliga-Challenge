@@ -59,10 +59,8 @@ export class SocioController {
     res.json(nombresComunes);
   }
 
-  static getEstadisticasPorEquipo(_req: Request, res: Response) {
+  static async getEstadisticasPorEquipo(_req: Request, res: Response) {
     const estadisticas = SocioModel.getEstadisticasPorEquipo();
     res.json(estadisticas);
   }
-
-  
 }

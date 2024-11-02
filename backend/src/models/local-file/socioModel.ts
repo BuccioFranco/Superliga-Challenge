@@ -42,27 +42,32 @@ export class SocioModel {
     return nombresComunes;
   }
 
-  static getEstadisticasPorEquipo(): Record<string, { cantidad: number; promedioEdad: number; menorEdad: number; mayorEdad: number }> {
-    const estadisticas: Record<string, { cantidad: number; promedioEdad: number; menorEdad: number; mayorEdad: number }> = {};
+  static getEstadisticasPorEquipo() {
+    const estadisticas: { _id: string; count: number; averageAge: number; minAge: number; maxAge: number }[] = [];
 
-    this.socios.forEach(socio => {
-      if (!estadisticas[socio.equipo]) {
-        estadisticas[socio.equipo] = {
-          cantidad: 0,
-          promedioEdad: 0,
-          menorEdad: Infinity,
-          mayorEdad: -Infinity,
-        };
+    const gruposPorEquipo = socios.reduce((acc, socio) => {
+      const equipo = socio.equipo;
+      if (!acc[equipo]) {
+        acc[equipo] = [];
       }
+      acc[equipo].push(socio);
+      return acc;
+    }, {} as { [key: string]: Socio[] });
 
-      estadisticas[socio.equipo].cantidad++;
-      estadisticas[socio.equipo].promedioEdad += socio.edad; 
-      estadisticas[socio.equipo].menorEdad = Math.min(estadisticas[socio.equipo].menorEdad, socio.edad);
-      estadisticas[socio.equipo].mayorEdad = Math.max(estadisticas[socio.equipo].mayorEdad, socio.edad);
-    });
+    for (const equipo in gruposPorEquipo) {
+      const sociosDelEquipo = gruposPorEquipo[equipo];
+      const count = sociosDelEquipo.length;
+      const averageAge = sociosDelEquipo.reduce((sum, socio) => sum + socio.edad, 0) / count;
+      const minAge = Math.min(...sociosDelEquipo.map(socio => socio.edad));
+      const maxAge = Math.max(...sociosDelEquipo.map(socio => socio.edad));
 
-    for (const equipo in estadisticas) {
-      estadisticas[equipo].promedioEdad /= estadisticas[equipo].cantidad;
+      estadisticas.push({
+        _id: equipo,
+        count,
+        averageAge: isNaN(averageAge) ? 0 : averageAge, // Maneja el caso de no tener socios
+        minAge,
+        maxAge,
+      });
     }
 
     return estadisticas;
