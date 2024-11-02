@@ -4,12 +4,10 @@ import multer from 'multer';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuración de multer para manejo de archivos
 const upload = multer({ dest: 'uploads/' });
 
 app.use(express.json());
 
-// Ruta de prueba para confirmar que el servidor está funcionando
 app.get('/', (_req: Request, res: Response) => {
     res.send('Servidor funcionando');
 });
