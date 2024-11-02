@@ -1,15 +1,8 @@
 import fs from 'fs'
 import csv from 'csv-parser'
+import { Socio } from "./models/socioType";
 
-interface Socio {
-  nombre: string,
-  edad: number,
-  equipo: string,
-  estadoCivil: string,
-  nivelEstudios: string,
-}
-
-export const parseCVS = async (filePath: string): Promise<Socio[]> => {
+export const parseCSV = async (filePath: string): Promise<Socio[]> => {
   const socios: Socio[] = [];
 
   const stream = fs.createReadStream(filePath).pipe(csv({ separator: ';' }));

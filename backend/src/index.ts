@@ -1,30 +1,11 @@
-import express, { Request, RequestHandler, Response } from 'express';
-import multer from 'multer';
+import express from 'express';
+import socioRoutes from './routes/sociosRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const upload = multer({ dest: 'uploads/' });
+app.use('/api/socios', socioRoutes);
 
-app.use(express.json());
-
-app.get('/', (_req: Request, res: Response) => {
-    res.send('Servidor funcionando');
-});
-
-const uploadFileHandler: RequestHandler = (req, res) => {
-  if (!req.file) {
-      res.status(400).send('No se subió ningún archivo');
-      return;
-  }
-
-  res.send('Archivo subido con éxito');
-};
-
-// Ruta para cargar el archivo CSV
-app.post('/upload', upload.single('file'), (uploadFileHandler));
-
-// Levantar el servidor
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
