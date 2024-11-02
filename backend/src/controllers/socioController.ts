@@ -1,41 +1,68 @@
 import { Request, Response } from 'express';
-import { contarTotalSocios, promedioEdadRacing, primeros100CasadosUniversitarios, nombresMasComunesRiver, estadisticasPorEquipo } from '../utils/dataProcessing';
-import { Socio } from '../models/socioType';
-import { parseCSV } from '../csvParser';  
+import { SocioModel } from '../models/local-file/socioModel';
+import { Socio } from '../models/types/sociosTypes'; 
+import csvParser from 'csv-parser';
+import { Readable } from 'stream'; 
 
-let sociosData: Socio[] = [];
+export class SocioController {
+  static async procesarArchivo(req: Request, res: Response) {
+    const results: Socio[] = [];
 
-const cargarDatos = async () => {
-    try {
-        sociosData = await parseCSV('./src/temporal/socios.csv');  
-    } catch (error) {
-        console.error("Error al cargar el archivo CSV:", error);
+    if (!req.file) {
+      res.status(400).send('No se ha subido ningún archivo.');
+      return;
     }
-};
 
-export const getTotalSocios = (_req: Request, res: Response) => {
-    const total = contarTotalSocios(sociosData);
+    const buffer = req.file.buffer;
+    const stream = Readable.from(buffer.toString());
+
+    stream
+      .pipe(csvParser())
+      .on('data', (data) => {
+        const socio: Socio = {
+          nombre: data.nombre,
+          edad: parseInt(data.edad, 10),
+          equipo: data.equipo,
+          estadoCivil: data.estadoCivil,
+          nivelEstudios: data.estudios,
+        };
+        results.push(socio);
+      })
+      .on('end', async () => {
+        console.log(`Total de socios leídos del archivo: ${results.length}`);
+        await SocioModel.procesarDatos(results); // Guarda los datos en el modelo
+        res.json(results);
+      })
+      .on('error', (error) => {
+        console.error('Error al procesar el archivo:', error);
+        res.status(500).send('Error al procesar el archivo');
+      });
+  }
+
+  static async getTotalSocios(_req: Request, res: Response) {
+    const total = await SocioModel.getTotalSocios();
     res.json({ total });
-};
+  }
 
-export const getPromedioEdadRacing = (_req: Request, res: Response) => {
-    const promedio = promedioEdadRacing(sociosData);
-    res.json({ promedio });
-};
+  static getPromedioEdadRacing(_req: Request, res: Response) {
+    const promedioEdad = SocioModel.getPromedioEdadRacing();
+    res.json({ promedioEdad });
+  }
 
-export const getCasadosUniversitarios = (_req: Request, res: Response) => {
-    const lista = primeros100CasadosUniversitarios(sociosData);
-    res.json({ lista });
-};
+  static getCasadosConEstudios(_req: Request, res: Response) {
+    const casadosConEstudios = SocioModel.getCasadosConEstudios();
+    res.json(casadosConEstudios);
+  }
 
-export const getNombresComunesRiver = (_req: Request, res: Response) => {
-    const nombres = nombresMasComunesRiver(sociosData);
-    res.json({ nombres });
-};
+  static getNombresComunesRiver (_req: Request, res: Response) {
+    const nombresComunes = SocioModel.getNombresComunesRiver();
+    res.json(nombresComunes);
+  }
 
-export const getEstadisticasPorEquipo = (_req: Request, res: Response) => {
-    const estadisticas = estadisticasPorEquipo(sociosData);
-    res.json({ estadisticas });
-};
+  static getEstadisticasPorEquipo(_req: Request, res: Response) {
+    const estadisticas = SocioModel.getEstadisticasPorEquipo();
+    res.json(estadisticas);
+  }
 
-cargarDatos();
+  
+}

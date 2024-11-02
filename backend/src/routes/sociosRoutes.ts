@@ -1,18 +1,13 @@
-// routes/socioRoutes.ts
 import express from 'express';
-import { getTotalSocios, getPromedioEdadRacing, getCasadosUniversitarios, getNombresComunesRiver, getEstadisticasPorEquipo } from '../controllers/socioController';
+import { upload } from '../middleware/upload';
+import { SocioController } from '../controllers/socioController';
 
-const router = express.Router();
+export const sociosRouter = express.Router();
 
-router.get('/total', getTotalSocios);
+sociosRouter.post('/upload', upload.single('file'), SocioController.procesarArchivo);
+sociosRouter.get('/total-socios', SocioController.getTotalSocios); 
+sociosRouter.get('/promedio-edad-racing', SocioController.getPromedioEdadRacing);
+sociosRouter.get('/casados-estudios', SocioController.getCasadosConEstudios);
+sociosRouter.get('/nombres-comunes-river', SocioController.getNombresComunesRiver);
+sociosRouter.get('/estadisticas-equipo', SocioController.getEstadisticasPorEquipo);
 
-router.get('/promedio-edad-racing', getPromedioEdadRacing);
-
-router.get('/casados-universitarios', getCasadosUniversitarios);
-
-router.get('/nombres-comunes-river', getNombresComunesRiver);
-
-// Ruta para obtener las estadísticas por equipo
-router.get('/estadisticas-equipo', getEstadisticasPorEquipo);
-
-export default router;
