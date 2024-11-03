@@ -31,6 +31,7 @@ export const fetchTotalSocios = async (): Promise<number> => {
 
 export const fetchPromedioEdadRacing = async (): Promise<number> => {
   const response = await fetch(`${API_URL}/promedio-edad-racing`);
+  console.log(`Fetching from URL: ${API_URL}/promedio-edad-racing`);
   if (!response.ok) {
     throw new Error('Error al obtener el promedio de edad de Racing');
   }
@@ -46,13 +47,14 @@ export const fetchCasadosConEstudios = async (): Promise<Socio[]> => {
   return response.json();
 };
 
-export const fetchNombresComunesRiver = async (): Promise<{ _id: string; count: number }[]> => {
+export const fetchNombresComunesRiver = async (): Promise<{ nombresComunes: { nombre: string; count: number }[] }> => {
   const response = await fetch(`${API_URL}/nombres-comunes-river`);
   if (!response.ok) {
     throw new Error('Error al obtener los nombres comunes de River');
   }
-  return response.json();
+  return response.json(); 
 };
+
 
 export const fetchEstadisticasPorEquipo = async (): Promise<EstadisticaEquipo[]> => {
   const response = await fetch(`${API_URL}/estadisticas-equipo`);

@@ -1,9 +1,9 @@
-// src/presentation/components/NombresComunesRiver.tsx
 import React, { useEffect, useState } from 'react';
-import { getNombresComunesRiver } from '../../application/servicies/SocioService'; 
+import { getNombresComunesRiver } from '../../application/servicies/SocioService';
 
 const NombresComunesRiver: React.FC = () => {
-  const [nombres, setNombres] = useState<{ _id: string; count: number }[]>([]);
+  // Cambia el tipo de estado aquí
+  const [nombres, setNombres] = useState<{ nombre: string; count: number }[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const NombresComunesRiver: React.FC = () => {
       ) : (
         <ul className="list-disc pl-5">
           {nombres.map((nombre, index) => (
-            <li key={index} className="mb-1">{nombre._id} - {nombre.count}</li>
+            <li key={index} className="mb-1">{nombre.nombre} - {nombre.count}</li>
           ))}
         </ul>
       )}

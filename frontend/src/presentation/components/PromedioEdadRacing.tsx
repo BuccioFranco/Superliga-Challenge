@@ -10,15 +10,17 @@ const PromedioEdadRacing: React.FC = () => {
     const fetchPromedio = async () => {
       try {
         const promedio = await getPromedioEdadRacing();
+        console.log("Promedio recibido:", promedio); // Log para verificar el promedio recibido
         setPromedioEdad(promedio);
       } catch (error) {
         console.error(error);
         setError('Error al obtener el promedio de edad de socios de Racing');
       }
     };
-
+  
     fetchPromedio();
   }, []);
+  
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4">
@@ -32,7 +34,7 @@ const PromedioEdadRacing: React.FC = () => {
       )}
     </div>
   );
-  
+
 };
 
 export default PromedioEdadRacing;

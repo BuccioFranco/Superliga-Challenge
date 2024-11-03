@@ -25,10 +25,11 @@ export const getCasadosConEstudios = async (): Promise<Socio[]> => {
   return fetchCasadosConEstudios();
 };
 
-export const getNombresComunesRiver = async (): Promise<{ _id: string; count: number }[]> => {
-  return fetchNombresComunesRiver();
+export const getNombresComunesRiver = async (): Promise<{ nombre: string; count: number }[]> => {
+  const response = await fetchNombresComunesRiver();
+  return response.nombresComunes; 
 };
 
 export const getEstadisticasPorEquipo = async (): Promise<EstadisticaEquipo[]> => {
   return fetchEstadisticasPorEquipo();
-}; 
+};

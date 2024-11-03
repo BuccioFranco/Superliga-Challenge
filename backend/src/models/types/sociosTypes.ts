@@ -1,6 +1,7 @@
 export interface Socio {
+  id: number;
   nombre: string;
-  edad: number;
+  edad: number; 
   equipo: string;
   estadoCivil: string;
   nivelEstudios: string;

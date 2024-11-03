@@ -1,9 +1,9 @@
-// src/presentation/components/EstadisticasPorEquipo.tsx
 import React, { useEffect, useState } from 'react';
+import { EstadisticaEquipo } from '../../domain/models/StatsType';
 import { getEstadisticasPorEquipo } from '../../application/servicies/SocioService'; 
 
 const EstadisticasPorEquipo: React.FC = () => {
-  const [estadisticas, setEstadisticas] = useState<{ _id: string; count: number; averageAge: number; minAge: number; maxAge: number }[]>([]);
+  const [estadisticas, setEstadisticas] = useState<EstadisticaEquipo[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
