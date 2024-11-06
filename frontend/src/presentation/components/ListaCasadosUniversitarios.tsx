@@ -1,50 +1,77 @@
-// src/presentation/components/CasadosConEstudios.tsx
-import React, { useEffect, useState } from 'react';
 import { Socio } from '../../domain/models/SocioType';
-import { getCasadosConEstudios } from '../../application/servicies/SocioService'; 
+import { getCasadosConEstudios } from '../../application/servicies/SocioService';
+import usePagination from '../hooks/usePagination';
+import useFetchData from '../hooks/useFetchData';
 
-const CasadosConEstudios: React.FC = () => {
-  const [socios, setSocios] = useState<Socio[]>([]);
-  const [error, setError] = useState<string | null>(null);
+const ITEMS_PER_PAGE = 10;
 
-  useEffect(() => {
-    const fetchTotal = async () => {
-      try {
-        const data = await getCasadosConEstudios();
-        setSocios(data);
-      } catch (error) {
-        console.error(error);
-        setError('Error al obtener los casados con estudios');
-      }
-    };
+const CasadosConEstudios = () => {
 
-    fetchTotal();
-  }, []);
+  const { data: socios, error, loading } = useFetchData<Socio[]>(getCasadosConEstudios);
+  const {
+    currentItems,
+    currentPage,
+    totalPages,
+    handleNextPage,
+    handlePreviousPage,
+  } = usePagination(socios || [], ITEMS_PER_PAGE);
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6">
-      <h2 className="text-xl font-semibold mb-4">Listado de Casados con Estudios Universitarios</h2>
-      {error ? (
-        <p className="text-red-600">{error}</p>
+    <div className="bg-white rounded-lg shadow-lg p-6">
+      <h2 className="text-2xl font-semibold mb-6 text-center text-gray-700">
+        Listado de Casados con Estudios Universitarios
+      </h2>
+      {loading ? (
+        <p className="text-gray-500 text-center">Cargando...</p>
+      ) : error ? (
+        <p className="text-red-600 text-center">{error}</p>
       ) : (
-        <table className="min-w-full border-collapse border border-gray-200">
-          <thead>
-            <tr>
-              <th className="border border-gray-300 px-4 py-2 text-left">Nombre</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Edad</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Equipo</th>
-            </tr>
-          </thead>
-          <tbody>
-            {socios.map((socio, index) => (
-              <tr key={index} className="hover:bg-gray-100">
-                <td className="border border-gray-300 px-4 py-2">{socio.nombre}</td>
-                <td className="border border-gray-300 px-4 py-2">{socio.edad}</td>
-                <td className="border border-gray-300 px-4 py-2">{socio.equipo}</td>
+        <div className="overflow-hidden rounded-lg border border-gray-200">
+          <table className="min-w-full bg-white">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                  Nombre
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                  Edad
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                  Equipo
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {currentItems.map((socio, index) => (
+                <tr key={index} className="border-t last:border-b hover:bg-gray-50">
+                  <td className="px-4 py-2 text-gray-700">{socio.nombre}</td>
+                  <td className="px-4 py-2 text-gray-700">{socio.edad}</td>
+                  <td className="px-4 py-2 text-gray-700">{socio.equipo}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="flex justify-center items-center space-x-4 mt-4">
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className="px-3 py-1 text-sm rounded bg-gray-300 text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-400 transition"
+            >
+              Anterior
+            </button>
+            <span className="text-sm text-gray-600">
+              Página {currentPage} de {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 text-sm rounded bg-gray-300 text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-400 transition"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

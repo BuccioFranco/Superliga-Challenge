@@ -1,86 +1,55 @@
-// src/presentation/components/CsvReader.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { Socio } from '../../domain/models/SocioType';
-import { getUploadCsv } from '../../application/servicies/SocioService';
+import useFileUpload from '../hooks/useFileUpload';
 
 interface CsvReaderProps {
-  onDataLoad: (data: Socio[]) => void; // Cambia esta función para recibir los datos cargados
+  onDataLoad: (data: Socio[]) => void;
+  onClearData: () => void;
 }
 
-const CsvReader: React.FC<CsvReaderProps> = ({ onDataLoad }) => {
-  const [file, setFile] = useState<File | null>(null);
-  const [data, setData] = useState<Socio[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
-
-    if (selectedFile) {
-      setFile(selectedFile);
-      setError(null); 
-    } else {
-      setError("Por favor, selecciona un archivo.");
-    }
-  };
-
-  const uploadFile = async () => {
-    if (!file) {
-      setError("Por favor, selecciona un archivo antes de enviar.");
-      return;
-    }
-
-    try {
-      const responseData: Socio[] = await getUploadCsv(file); 
-      setData(responseData); 
-      onDataLoad(responseData); 
-      setError(null);
-    } catch (error) {
-      setError(`Error al cargar el archivo: ${(error as Error).message}`);
-    }
-  };
+const CsvReader: React.FC<CsvReaderProps> = ({ onDataLoad, onClearData }) => {
+  // Hook para manejar la selección y carga de archivos
+  const { file, error, handleFileSelect, uploadFile, cancelFile } = useFileUpload(
+    onDataLoad,
+    onClearData // Llamada a onClearData cuando se elimina el archivo
+  );
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6">
-      <h2 className="text-xl font-semibold mb-4">Cargar archivo CSV de Socios</h2>
-      <input
-        type="file"
-        accept=".csv"
-        onChange={handleFileChange}
-        className="mb-4 border rounded-lg p-2"
-      />
-      <button
-        onClick={uploadFile}
-        className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition duration-200"
-      >
-        Enviar
-      </button>
-      {error && <p className="text-red-600 mt-4">{error}</p>}
-      {data.length > 0 && (
-        <div className="mt-6 overflow-auto">
-          <table className="min-w-full bg-white border border-gray-300 rounded-lg">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border px-4 py-2">Nombre</th>
-                <th className="border px-4 py-2">Edad</th>
-                <th className="border px-4 py-2">Equipo</th>
-                <th className="border px-4 py-2">Estado Civil</th>
-                <th className="border px-4 py-2">Nivel de Estudios</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((row, index) => (
-                <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                  <td className="border px-4 py-2">{row.nombre}</td>
-                  <td className="border px-4 py-2">{row.edad}</td>
-                  <td className="border px-4 py-2">{row.equipo}</td>
-                  <td className="border px-4 py-2">{row.estadoCivil}</td>
-                  <td className="border px-4 py-2">{row.nivelEstudios}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-xs mx-auto">
+      <h2 className="text-lg font-semibold text-center mb-4">Añadir archivo</h2>
+
+      {!file ? (
+        <label className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 text-center text-gray-500 hover:bg-gray-100 transition duration-200">
+          <span className="text-blue-500 font-semibold">Seleccionar archivo</span>
+          <input
+            type="file"
+            accept=".csv"
+            onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
+            className="hidden"
+          />
+        </label>
+      ) : (
+        <div className="flex flex-col items-center">
+          <p className="text-gray-700 mb-2">{file.name}</p>
+          <button
+            onClick={() => {
+              cancelFile();
+              onClearData(); // Llamamos a onClearData al eliminar el archivo
+            }}
+            className="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600 transition duration-200 mb-2"
+          >
+            Eliminar archivo
+          </button>
+          <button
+            onClick={uploadFile}
+            className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition duration-200"
+          >
+            Enviar
+          </button>
         </div>
       )}
+
+      {error && <p className="text-red-600 mt-4 text-center">{error}</p>}
     </div>
   );
 };

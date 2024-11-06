@@ -1,37 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import useFetchData from '../hooks/useFetchData';
 import { getNombresComunesRiver } from '../../application/servicies/SocioService';
 
-const NombresComunesRiver: React.FC = () => {
-  // Cambia el tipo de estado aquí
-  const [nombres, setNombres] = useState<{ nombre: string; count: number }[]>([]);
-  const [error, setError] = useState<string | null>(null);
+const NombresComunesRiver = () => {
 
-  useEffect(() => {
-    const getNombres = async () => {
-      try {
-        const data = await getNombresComunesRiver();
-        setNombres(data);
-      } catch (error) {
-        console.error(error);
-        setError('Error al obtener los nombres comunes de River');
-      }
-    };
-
-    getNombres();
-  }, []);
+  const { data: nombres, error, loading } = useFetchData<{ nombre: string; count: number }[]>(getNombresComunesRiver);
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6">
-      <h2 className="text-xl font-semibold mb-4">Los 5 Nombres Más Comunes entre Hinchas de River</h2>
-      {error ? (
-        <p className="text-red-600">{error}</p>
+    <div className="bg-white shadow-md rounded-lg p-6 max-w-md mx-auto">
+      <h2 className="text-2xl font-semibold mb-6 text-center">Los 5 Nombres Más Comunes entre Hinchas de River</h2>
+      {loading ? (
+        <p className="text-gray-500 text-center">Cargando...</p>
+      ) : error ? (
+        <p className="text-red-600 text-center">{error}</p>
       ) : (
-        <ul className="list-disc pl-5">
-          {nombres.map((nombre, index) => (
-            <li key={index} className="mb-1">{nombre.nombre} - {nombre.count}</li>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {nombres?.map((nombre, index) => (
+            <div key={index} className="bg-blue-100 p-4 rounded-lg shadow hover:bg-blue-200 transition">
+              <h3 className="text-lg font-medium text-blue-600">{nombre.nombre}</h3>
+              <p className="text-gray-700">Cantidad: {nombre.count}</p>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
+      
     </div>
   );
 };

@@ -1,37 +1,30 @@
-import React, { useState } from 'react';
-
-import TotalSocios from '../components/TotalSocios';
-import PromedioEdadRacing from '../components/PromedioEdadRacing';
-import CasadosConEstudios from '../components/ListaCasadosUniversitarios';
-import NombresComunesRiver from '../components/NombresComunesRiver';
-import EstadisticasPorEquipo from '../components/EstadisticasPorEquipo';
+import ContentDisplay from '../components/ContentDisplay';
 import CsvReader from '../components/FileUploader';
+import Sidebar from '../components/SideBar';
+import { useDataLoader } from '../hooks/useDataLoader';
 
 const Home: React.FC = () => {
-  const [dataLoaded, setDataLoaded] = useState(false); // Estado para controlar si se han cargado los datos
-
-  const handleDataLoad = () => {
-    setDataLoaded(true); // Cambiar a true una vez que los datos han sido cargados
-  };
+  const { dataLoaded, loadData, clearData, currentComponent, changeComponent, isVisible } = useDataLoader();
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center mb-4">Gestión de Socios</h1>
-      
-      {dataLoaded && ( // Solo renderizar las estadísticas si los datos han sido cargados
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <TotalSocios />
-          <PromedioEdadRacing />
-          <CasadosConEstudios />
-          <NombresComunesRiver />
-          <EstadisticasPorEquipo />
-        </div>
-      )}
-      
-      <CsvReader onDataLoad={handleDataLoad} /> {/* Componente para cargar el CSV */}
+    <div className="h-screen w-screen flex p-4 items-center">
+      <div className="w-1/2 flex flex-col items-start justify-start">
+        <CsvReader onDataLoad={loadData} onClearData={clearData} />
+      </div>
+      <div className="h-screen w-screen flex p-4">
+        {dataLoaded && (
+          <>
+            <div className="w-1/6 flex flex-col items-center justify-center pr-4">
+              <Sidebar onComponentChange={changeComponent} currentComponent={currentComponent} />
+            </div>
+            <div className="flex-grow flex items-center justify-center w-1/4">
+              <ContentDisplay isVisible={isVisible} currentComponent={currentComponent} />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
-  
 };
 
 export default Home;
