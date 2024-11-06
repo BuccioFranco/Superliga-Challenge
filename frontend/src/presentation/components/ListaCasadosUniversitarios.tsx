@@ -1,5 +1,5 @@
 import { Socio } from '../../domain/models/SocioType';
-import { getCasadosConEstudios } from '../../application/servicies/SocioService';
+import { getCasadosConEstudios } from '../../application/services/SocioService';
 import usePagination from '../hooks/usePagination';
 import useFetchData from '../hooks/useFetchData';
 

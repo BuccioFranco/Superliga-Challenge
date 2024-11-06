@@ -29,14 +29,13 @@ export const fetchTotalSocios = async (): Promise<number> => {
   return data.total;
 };
 
-export const fetchPromedioEdadRacing = async (): Promise<number> => {
-  const response = await fetch(`${API_URL}/promedio-edad-racing`);
-  console.log(`Fetching from URL: ${API_URL}/promedio-edad-racing`);
+export const fetchPromedioEdad = async (): Promise<{ equipo: string; promedioEdad: number }[]> => {
+  const response = await fetch(`${API_URL}/promedio-edad`);
   if (!response.ok) {
-    throw new Error('Error al obtener el promedio de edad de Racing');
+    throw new Error('Error al obtener el promedio de edad');
   }
   const data = await response.json();
-  return data.promedioEdad;
+  return data;  
 };
 
 export const fetchCasadosConEstudios = async (): Promise<Socio[]> => {
@@ -47,13 +46,14 @@ export const fetchCasadosConEstudios = async (): Promise<Socio[]> => {
   return response.json();
 };
 
-export const fetchNombresComunesRiver = async (): Promise<{ nombresComunes: { nombre: string; count: number }[] }> => {
-  const response = await fetch(`${API_URL}/nombres-comunes-river`);
+export const fetchNombresComunes = async (): Promise<{ equipo: string; nombresComunes: { nombre: string; count: number }[] }[]> => {
+  const response = await fetch(`${API_URL}/nombres-comunes`);
   if (!response.ok) {
-    throw new Error('Error al obtener los nombres comunes de River');
+    throw new Error('Error al obtener los nombres comunes por equipo');
   }
-  return response.json(); 
+  return response.json();  
 };
+
 
 
 export const fetchEstadisticasPorEquipo = async (): Promise<EstadisticaEquipo[]> => {

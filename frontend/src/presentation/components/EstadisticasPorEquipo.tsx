@@ -1,4 +1,4 @@
-import { getEstadisticasPorEquipo } from "../../application/servicies/SocioService";
+import { getEstadisticasPorEquipo } from "../../application/services/SocioService";
 import useFetchData from '../hooks/useFetchData';
 
 const EstadisticasPorEquipo= () => {

@@ -6,7 +6,7 @@ type FetchState<T> = {
   loading: boolean;
 };
 
-function useFetchData<T>(fetchFunction: () => Promise<T>): FetchState<T> {
+function useFetchData<T>(fetchFunction: () => Promise<T>, deps: unknown[] = []): FetchState<T> {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -25,7 +25,8 @@ function useFetchData<T>(fetchFunction: () => Promise<T>): FetchState<T> {
     };
 
     fetchData();
-  }, [fetchFunction]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchFunction, ...deps]); // Asegúrate de agregar las dependencias
 
   return { data, error, loading };
 }

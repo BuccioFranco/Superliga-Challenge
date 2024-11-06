@@ -1,87 +1,50 @@
-import { Request, Response } from 'express';
-import { SocioModel } from '../models/local-file/socioModel';
-import { Socio } from '../models/types/sociosTypes';
-import csvParser from 'csv-parser';
-import { Readable } from 'stream';
-import { writeFileSync } from 'fs';
-import path from 'path';
+import { Request, Response, NextFunction } from 'express';
+import { SocioModel } from '../models/repositories/socioModel';
+import { CustomError } from '../utils/CustomError'; 
 
 export class SocioController {
-  static async procesarArchivo(req: Request, res: Response) {
-    const results: Socio[] = [];
-
-    if (!req.file) {
-      res.status(400).send('No se ha subido ningún archivo.');
-      return;
-    }
-
-    const buffer = req.file.buffer;
-    const stream = Readable.from(buffer.toString())
-
-    stream
-      .pipe(csvParser({ separator: ';', headers: false }))
-      .on('data', (data) => {
-
-        const socio: Socio = {
-          id: results.length + 1, // Asigna un ID basado en la longitud actual
-          nombre: data[0] || '', // Suponiendo que el nombre está en la primera columna
-          edad: data[1] ? parseInt(data[1], 10) : 0, // Asegúrate de convertir la edad
-          equipo: data[2] || '', // Asegúrate de que el equipo esté bien mapeado
-          estadoCivil: data[3] || '', // Estado civil
-          nivelEstudios: data[4] || '', // Nivel de estudios
-        };
-        results.push(socio);
-      })
-      .on('end', async () => {
-        console.log(`Total de socios leídos del archivo: ${results.length}`);
-        const jsonFilePath = path.join(__dirname, '../data/socios.json');
-        writeFileSync(jsonFilePath, JSON.stringify(results, null, 2));
-        res.json(results);
-      })
-      .on('error', (error) => {
-        console.error('Error al procesar el archivo:', error);
-        res.status(500).send('Error al procesar el archivo');
-      });
-  }
-
-  static async getTotalSocios(_req: Request, res: Response) {
+  static async getTotalSocios(_req: Request, res: Response, next: NextFunction) {
     try {
       const { total, ultimoId } = await SocioModel.getTotalSocios();
-      res.json({ total, ultimoId }); // Envía ambos valores en la respuesta
+      res.json({ total, ultimoId });
     } catch (error) {
-      console.error("Error al obtener el total de socios:", error);
-      res.status(500).json({ error: 'Error al obtener el total de socios' });
+      next(new CustomError('Error al obtener el total de socios', 500)); 
     }
   }
 
-  static async getPromedioEdadRacing(_req: Request, res: Response) {
+  static async getPromedioEdadPorEquipo(_req: Request, res: Response, next: NextFunction) {
     try {
-      const { promedioEdad } = await SocioModel.getPromedioEdadRacing();
-      res.json({ promedioEdad });
+      const estadisticas = await SocioModel.getPromedioEdadPorEquipo();
+      res.json(estadisticas);
     } catch (error) {
-      console.error("Error al obtener el promedio:", error);
-      res.status(500).json({ error: 'Error al obtener el promedio de edad' });
+      next(new CustomError('Error al obtener el promedio de edad de Racing', 500)); 
     }
   }
 
-  static async getCasadosConEstudios(_req: Request, res: Response) {
-    const casadosConEstudios = await SocioModel.getCasadosConEstudios();
-    res.json(casadosConEstudios);
-  }
-
-  static async getNombresComunesRiver(_req: Request, res: Response) {
+  static async getCasadosConEstudios(_req: Request, res: Response, next: NextFunction) {
     try {
-      const nombresComunes = await SocioModel.getNombresComunesRiver(); // Llama al método
-      res.json({ nombresComunes }); // Envía la respuesta con los nombres comunes
+      const casadosConEstudios = await SocioModel.getCasadosConEstudios();
+      res.json(casadosConEstudios);
     } catch (error) {
-      console.error("Error al obtener los nombres comunes:", error);
-      res.status(500).json({ error: 'Error al obtener los nombres comunes de River' });
+      next(new CustomError('Error al obtener socios casados con estudios universitarios', 500)); 
     }
   }
 
-  static async getEstadisticasPorEquipo(_req: Request, res: Response) {
-    const estadisticas = await SocioModel.getEstadisticasPorEquipo();
-    res.json(estadisticas);
+  static async getNombresComunesPorEquipo(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const nombresComunes = await SocioModel.getNombresComunesPorEquipo();
+      res.json({ nombresComunes });
+    } catch (error) {
+      next(new CustomError('Error al obtener los nombres comunes de hinchas de River', 500)); 
+    }
   }
-  
+
+  static async getEstadisticasPorEquipo(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const estadisticas = await SocioModel.getEstadisticasPorEquipo();
+      res.json(estadisticas);
+    } catch (error) {
+      next(new CustomError('Error al obtener estadísticas por equipo', 500)); 
+    }
+  }
 }

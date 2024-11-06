@@ -6,7 +6,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ onComponentChange, currentComponent }) => {
-  const components = ['TotalSocios', 'PromedioEdadRacing', 'CasadosConEstudios', 'NombresComunesRiver', 'EstadisticasPorEquipo'];
+  const components = ['TotalSocios', 'PromedioEdad', 'CasadosConEstudios', 'NombresComunes', 'EstadisticasPorEquipo'];
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 min-w-[250px]">

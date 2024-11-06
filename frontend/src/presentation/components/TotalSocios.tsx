@@ -1,4 +1,4 @@
-import { getTotalSocios } from '../../application/servicies/SocioService';
+import { getTotalSocios } from '../../application/services/SocioService';
 import useFetchData from '../hooks/useFetchData';
 
 const TotalSocios = () => {

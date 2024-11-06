@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Socio } from '../../domain/models/SocioType';
-import { getUploadCsv } from '../../application/servicies/SocioService';
+import { getUploadCsv } from '../../application/services/SocioService';
 
 const useFileUpload = (onDataLoad: (data: Socio[]) => void, onClearData: () => void) => {
   const [file, setFile] = useState<File | null>(null);
@@ -23,7 +23,7 @@ const useFileUpload = (onDataLoad: (data: Socio[]) => void, onClearData: () => v
 
     try {
       const responseData: Socio[] = await getUploadCsv(file);
-      onDataLoad(responseData);  // Cargar datos
+      onDataLoad(responseData);
       setError(null);
     } catch (error) {
       setError(`Error al cargar el archivo: ${(error as Error).message}`);
@@ -33,7 +33,7 @@ const useFileUpload = (onDataLoad: (data: Socio[]) => void, onClearData: () => v
   const cancelFile = () => {
     setFile(null);
     setError(null);
-    onClearData();  // Llamamos a la función de limpieza
+    onClearData(); 
   };
 
   return {

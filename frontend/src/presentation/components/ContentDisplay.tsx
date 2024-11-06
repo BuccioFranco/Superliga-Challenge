@@ -1,26 +1,27 @@
 import React from 'react';
 import TotalSocios from './TotalSocios';
-import PromedioEdadRacing from './PromedioEdadRacing';
+import PromedioEdad from './PromedioEdad';
 import CasadosConEstudios from './ListaCasadosUniversitarios';
-import NombresComunesRiver from './NombresComunesRiver';
+import NombresComunes from './NombresComunes';
 import EstadisticasPorEquipo from './EstadisticasPorEquipo';
 
 interface ContentDisplayProps {
   isVisible: boolean;
   currentComponent: string | null;
+  selectedEquipo: string;  
 }
 
-const ContentDisplay: React.FC<ContentDisplayProps> = ({ isVisible, currentComponent }) => {
+const ContentDisplay: React.FC<ContentDisplayProps> = ({ isVisible, currentComponent, selectedEquipo }) => {
   const renderComponent = () => {
     switch (currentComponent) {
       case 'TotalSocios':
         return <TotalSocios />;
-      case 'PromedioEdadRacing':
-        return <PromedioEdadRacing />;
+      case 'PromedioEdad':
+        return <PromedioEdad selectedEquipo={selectedEquipo}/>;
       case 'CasadosConEstudios':
         return <CasadosConEstudios />;
-      case 'NombresComunesRiver':
-        return <NombresComunesRiver />;
+      case 'NombresComunes':
+        return <NombresComunes selectedEquipo={selectedEquipo} />;
       case 'EstadisticasPorEquipo':
         return <EstadisticasPorEquipo />;
       default:
