@@ -13,7 +13,7 @@ export const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS }: { accepte
       }
 
       if (!origin) {
-        return callback(null, true); // Permitir solicitudes sin origen (como las de Postman)
+        return callback(null, true); 
       }
 
       return callback(new Error('Not allowed by CORS'));

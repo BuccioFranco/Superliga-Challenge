@@ -38,11 +38,11 @@ export class SocioModel {
   }
 
   static async getCasadosConEstudios(): Promise<Socio[]> {
-    const socios: Socio[] = await SocioModel.obtenerDatos(); // Asegúrate de obtener los datos del JSON
+    const socios: Socio[] = await SocioModel.obtenerDatos(); 
     return socios
       .filter(socio => socio.estadoCivil === 'Casado' && socio.nivelEstudios === 'Universitario')
       .sort((a, b) => a.edad - b.edad)
-      .slice(0, 20);
+      .slice(0, 100);
   }
 
   static async getNombresComunesRiver(): Promise<{ nombre: string; count: number }[]> {

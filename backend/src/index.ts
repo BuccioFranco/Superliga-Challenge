@@ -8,8 +8,8 @@ const PORT = process.env.PORT || 3000;
 app.use(corsMiddleware());
 app.use(express.json());
 app.use('/api/socios', sociosRouter);
-app.use(express.json({ limit: '10mb' })); // Aumentar límite de tamaño de cuerpo JSON
-app.use(express.urlencoded({ limit: '10mb', extended: true })); // Aumentar límite para formularios
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true })); 
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
