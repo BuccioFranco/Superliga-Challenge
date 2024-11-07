@@ -1,11 +1,10 @@
-// src/models/repositories/socioModel.ts
 import fs from 'fs';
 import path from 'path';
-import { Socio } from '../types/sociosTypes';
+import { Socio } from '../../types/sociosTypes';
 import { CustomError } from '../../utils/CustomError';
 
 export class SocioModel {
-  private static async cargarDatos(): Promise<Socio[]> {
+  static async cargarDatos(): Promise<Socio[]> {
     const filePath = path.join(__dirname, '../../data/socios.json');
     try {
       const data = await fs.promises.readFile(filePath, 'utf-8');
@@ -43,7 +42,7 @@ export class SocioModel {
     try {
       const estadisticas: { _id: string; count: number; averageAge: number; minAge: number; maxAge: number }[] = [];
       const socios: Socio[] = await SocioModel.cargarDatos();
-      
+  
       const gruposPorEquipo = socios.reduce((acc, socio) => {
         const equipo = socio.equipo;
         if (!acc[equipo]) {
@@ -52,19 +51,18 @@ export class SocioModel {
         acc[equipo].push(socio);
         return acc;
       }, {} as { [key: string]: Socio[] });
-
+  
       for (const equipo in gruposPorEquipo) {
         const sociosDelEquipo = gruposPorEquipo[equipo];
         const count = sociosDelEquipo.length;
-
+  
         if (count === 0) continue;
-
-        const averageAge = Math.round(
-          sociosDelEquipo.reduce((sum, socio) => sum + Number(socio.edad), 0) / count
-        );
+  
+        const totalEdad = sociosDelEquipo.reduce((sum, socio) => sum + Number(socio.edad), 0);
+        const averageAge = Math.ceil(totalEdad / count); // Redondeo a entero
         const minAge = Math.min(...sociosDelEquipo.map(socio => Number(socio.edad)));
         const maxAge = Math.max(...sociosDelEquipo.map(socio => Number(socio.edad)));
-
+  
         estadisticas.push({
           _id: equipo,
           count,
@@ -73,12 +71,13 @@ export class SocioModel {
           maxAge,
         });
       }
-
+  
       return estadisticas;
     } catch (error) {
-      throw new CustomError('Error al obtener estadísticas por equipo', 500); 
+      throw new CustomError('Error al obtener estadísticas por equipo', 500);
     }
   }
+  
 
   static async getPromedioEdadPorEquipo(): Promise<{ equipo: string; promedioEdad: number }[]> {
     try {

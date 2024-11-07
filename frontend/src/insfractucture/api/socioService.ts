@@ -46,15 +46,13 @@ export const fetchCasadosConEstudios = async (): Promise<Socio[]> => {
   return response.json();
 };
 
-export const fetchNombresComunes = async (): Promise<{ equipo: string; nombresComunes: { nombre: string; count: number }[] }[]> => {
+export const fetchNombresComunes = async (): Promise<{ nombresComunes: { equipo: string; nombresComunes: { nombre: string; count: number }[] }[] }> => {
   const response = await fetch(`${API_URL}/nombres-comunes`);
   if (!response.ok) {
     throw new Error('Error al obtener los nombres comunes por equipo');
   }
-  return response.json();  
+  return response.json();
 };
-
-
 
 export const fetchEstadisticasPorEquipo = async (): Promise<EstadisticaEquipo[]> => {
   const response = await fetch(`${API_URL}/estadisticas-equipo`);

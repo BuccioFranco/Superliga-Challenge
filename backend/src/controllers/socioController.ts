@@ -3,6 +3,15 @@ import { SocioModel } from '../models/repositories/socioModel';
 import { CustomError } from '../utils/CustomError'; 
 
 export class SocioController {
+  static async getSocios(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const socios = await SocioModel.cargarDatos(); 
+      res.json(socios); 
+    } catch (error) {
+      next(error); 
+    }
+  }
+
   static async getTotalSocios(_req: Request, res: Response, next: NextFunction) {
     try {
       const { total, ultimoId } = await SocioModel.getTotalSocios();

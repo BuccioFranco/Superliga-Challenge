@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react';
-
-type FetchState<T> = {
-  data: T | null;
-  error: string | null;
-  loading: boolean;
-};
+import { FetchState } from '../../domain/models/FetchType';
 
 function useFetchData<T>(fetchFunction: () => Promise<T>, deps: unknown[] = []): FetchState<T> {
   const [data, setData] = useState<T | null>(null);
@@ -26,7 +21,7 @@ function useFetchData<T>(fetchFunction: () => Promise<T>, deps: unknown[] = []):
 
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchFunction, ...deps]); // Asegúrate de agregar las dependencias
+  }, [fetchFunction, ...deps]); 
 
   return { data, error, loading };
 }

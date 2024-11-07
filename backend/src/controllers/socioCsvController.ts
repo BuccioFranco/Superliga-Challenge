@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Socio } from '../models/types/sociosTypes';
+import { Socio } from '../types/sociosTypes';
 import csvParser from 'csv-parser';
 import { Readable } from 'stream';
 import { writeFileSync } from 'fs';
@@ -31,7 +31,6 @@ export class CsvController {
           results.push(socio);
         })
         .on('end', () => {
-          console.log(`Total de socios leídos del archivo: ${results.length}`);
           CsvController.guardarSociosEnJson(results);
           res.json(results);
         })
@@ -49,7 +48,6 @@ export class CsvController {
     const jsonFilePath = path.join(__dirname, '../data/socios.json');
     try {
       writeFileSync(jsonFilePath, JSON.stringify(socios, null, 2), 'utf-8');
-      console.log('Archivo JSON guardado exitosamente.');
     } catch (error) {
       console.error('Error al guardar el archivo JSON:', error);
     }

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import ContentDisplay from '../components/ContentDisplay';
-import CsvReader from '../components/FileUploader';
-import Sidebar from '../components/SideBar'; // Componente Sidebar con MenuEquipo dentro
+import ContentDisplay from '../components/contents/ContentDisplay';
+import CsvReader from '../components/file/FileUploader';
+import Sidebar from '../components/contents/SideBar'; // Componente Sidebar con MenuEquipo dentro
 import { useDataLoader } from '../hooks/useDataLoader';
-import MenuEquipo from '../components/MenuEquipos';
+import MenuEquipo from '../components/contents/MenuEquipos';
 
 const Home: React.FC = () => {
   const { dataLoaded, loadData, clearData, currentComponent, changeComponent, isVisible } = useDataLoader();

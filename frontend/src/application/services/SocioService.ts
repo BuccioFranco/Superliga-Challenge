@@ -44,24 +44,21 @@ export const getNombresComunes = async (equipo: string | null): Promise<{ nombre
   }
 
   try {
-    // Llamamos a fetchNombresComunes que devuelve un array de objetos
-    const response = await fetchNombresComunes(); // Esto es un array de objetos
-    console.log('Respuesta de la API:', response);
-
-    // Buscamos el objeto con el equipo correspondiente
-    const equipoData = response.find(item => item.equipo.toLowerCase() === equipo.toLowerCase());
+    const response = await fetchNombresComunes();
+    const equiposArray = response.nombresComunes;
+    const equipoData = equiposArray.find(item => item.equipo.toLowerCase() === equipo.toLowerCase());
 
     if (!equipoData) {
       throw new Error(`No se encontraron datos para el equipo: ${equipo}`);
     }
 
-    // Devolvemos los nombres comunes del equipo
-    return equipoData.nombresComunes; // Esto es un array de { nombre: string, count: number }
+    return equipoData.nombresComunes; 
   } catch (error) {
     console.error('Error al obtener los nombres comunes:', error);
     throw error;
   }
 };
+
 
 export const getEstadisticasPorEquipo = async (): Promise<EstadisticaEquipo[]> => {
   return fetchEstadisticasPorEquipo();

@@ -10,7 +10,7 @@ app.use(corsMiddleware());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-app.use('/api/socios', sociosRouter);
+app.use('/api', sociosRouter);
 
 app.use((err: CustomError, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err.message); 
@@ -24,3 +24,5 @@ app.use((err: CustomError, _req: Request, res: Response, _next: NextFunction) =>
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
+
+export default app;  

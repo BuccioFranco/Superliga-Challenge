@@ -5,15 +5,17 @@ import { CsvController } from '../controllers/socioCsvController';
 
 export const sociosRouter = express.Router();
 
-sociosRouter.post('/upload', upload.single('file'), CsvController.procesarArchivo);
+sociosRouter.post('/socios/upload', upload.single('file'), CsvController.procesarArchivo);
 
-sociosRouter.get('/total-socios', SocioController.getTotalSocios); 
+sociosRouter.get('/socios', SocioController.getSocios); 
 
-sociosRouter.get('/promedio-edad', SocioController.getPromedioEdadPorEquipo);
+sociosRouter.get('/socios/total-socios', SocioController.getTotalSocios); 
 
-sociosRouter.get('/casados-estudios', SocioController.getCasadosConEstudios);
+sociosRouter.get('/socios/promedio-edad', SocioController.getPromedioEdadPorEquipo);
 
-sociosRouter.get('/nombres-comunes', SocioController.getNombresComunesPorEquipo);
+sociosRouter.get('/socios/casados-estudios', SocioController.getCasadosConEstudios);
 
-sociosRouter.get('/estadisticas-equipo', SocioController.getEstadisticasPorEquipo);
+sociosRouter.get('/socios/nombres-comunes', SocioController.getNombresComunesPorEquipo);
+
+sociosRouter.get('/socios/estadisticas-equipo', SocioController.getEstadisticasPorEquipo);
 
