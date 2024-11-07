@@ -29,13 +29,13 @@ const CasadosConEstudios = () => {
           <table className="min-w-full bg-white">
             <thead>
               <tr className="bg-gray-100">
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                <th className="px-4 py-3 w-1/3 text-left text-sm font-semibold text-gray-600">
                   Nombre
                 </th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                <th className="px-4 py-3 w-1/3 text-left text-sm font-semibold text-gray-600">
                   Edad
                 </th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                <th className="px-4 py-3 w-1/3 text-left text-sm font-semibold text-gray-600">
                   Equipo
                 </th>
               </tr>

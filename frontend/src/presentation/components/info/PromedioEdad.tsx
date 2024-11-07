@@ -12,8 +12,8 @@ const PromedioEdad: React.FC<TeamProps> = ({ selectedEquipo }) => {
 
   return (
     <CardStat
-      title={`Promedio de Edad de Socios de ${selectedEquipo || 'No seleccionado'}`}
-      value={promedioEdad?.toFixed(2) ?? null}
+      title={`Promedio de Edad de Socios de ${selectedEquipo}`}
+      value={promedioEdad ?? null}
       loading={loading}
       error={error}
     />

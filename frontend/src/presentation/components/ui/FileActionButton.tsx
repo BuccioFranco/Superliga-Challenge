@@ -8,7 +8,7 @@ const FileActionButton: React.FC<FileActionButtonProps> = ({
 }) => (
   <button
     onClick={onClick}
-    className={`rounded-lg px-4 py-2 text-white ${bgColor} hover:${hoverColor} transition duration-200`}
+    className={`rounded-lg px-4 py-2 text-white ${bgColor} hover:${hoverColor} transition duration-200 mt-5`}
   >
     {text}
   </button>
